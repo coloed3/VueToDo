@@ -1,6 +1,11 @@
 
 <template>
   <div>
+    <div>
+      <ul>
+        <li class="alert" v-for="error in errors" :key="error.id">{{error}}</li>
+      </ul>
+    </div>
     <h3>Add Todo</h3>
 
     <div class="add">
@@ -19,14 +24,24 @@ export default {
   name: "AddTodo",
   data() {
     return {
-      title: ""
+      title: "",
+      errors: []
     };
   },
   methods: {
     ...mapActions(["addTodo"]),
     onSubmit() {
-      this.addTodo(this.title);
-      this.title = "";
+      if (this.title.trim() === "") {
+        this.errors.push("Please add a todo");
+      } else {
+        this.addTodo(this.title);
+        this.title = "";
+        this.errors = [];
+      }
+
+      setTimeout(() => {
+        this.errors = [];
+      }, 2000);
     }
   }
 };
@@ -46,4 +61,10 @@ input[type="submit"]
   color: #fff
   border: 1px #41b883 solid
   cursor: pointer
+.alert
+  color: red
+  font-size: 2rem
+  list-style: none
+  font-weight: 900
+  
 </style>
